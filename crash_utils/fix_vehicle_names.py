@@ -5,9 +5,9 @@ def fix_vehicle_names(df):
     import numpy as np
 
     ## for testing
-    data_path = "/Users/Mark/brainstation/capstone/nyc_bike_crash_analysis/data/"
-    data_file_with_path = data_path + "Motor_Vehicle_Collisions_-_Crashes.csv"
-    df = pd.read_csv(data_file_with_path)
+    #data_path = "/Users/Mark/brainstation/capstone/nyc_bike_crash_analysis/data/"
+    #data_file_with_path = data_path + "Motor_Vehicle_Collisions_-_Crashes.csv"
+    #df = pd.read_csv(data_file_with_path)
 
 
     # first lower-case and trim trailing and leading white space everything
