@@ -14,5 +14,5 @@ Each row contains a crash event.  The NYPD must file a police report if there is
 
 ## Summary
 
-![Outcome_map](/Users/Mark/brainstation/capstone/nyc_bike_crash_analysis/figs/Outcome_map.png)
+<img src="https://markhalverson.weebly.com/uploads/4/2/1/8/42181011/outcome-map_orig.png" alt="Crash outcome map" style="zoom:80%;" />
 
