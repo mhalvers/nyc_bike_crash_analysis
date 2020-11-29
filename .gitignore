@@ -1,7 +1,15 @@
+# folders
 data
+figs
+
+# OS X
 .DS_Store
-*ipynb
+
+# emacs
 *~
+
+# python
+*ipynb
 __pycache__
 
 # Tableau
