@@ -11,92 +11,14 @@ def fix_vehicle_names(df):
 
 
     # first lower-case and trim trailing and leading white space everything
-    for col in df.columns[-5:]
+    for col in df.columns[-5:]:
         df[col] = df[col].str.lower()
         df[col] = df[col].str.strip()
 
-    def vehicle_name_map():
-        vehicle_map = {
-            "bicycle":"bike",
-
-            "sedan":"passenger vehicle",
-            "station wagon/sport utility vehicle":"passenger vehicle",
-            "sport utility / station wagon":"passenger vehicle",
-            "4 dr sedan":"passenger vehicle",
-            "2 dr sedan":"passenger vehicle",
-            "convertible":"passenger vehicle",
-
-            "truck":"pick-up truck",
-            "pick up tr":"pick-up truck",
-
-            "livery vehicle":"limousine",
-            "limo":"limousine",
-            "limou":"limousine",
-
-            "posta":"mail truck",
-            "usps":"mail truck",
-            "usps mail":"mail truck",
-
-            "ambu":"ambulance",
-            "ambul":"ambulance",
-
-            "garbage tr":"garbage truck",
-            "garbage or refuse":"garbage truck",
-            "sanit":"garbage truck",
-
-            "cement tru":"cement truck",
-            "concrete mixer":"cement truck",
-
-            "dump":"dump truck",
-
-            "fire":"fire truck",
-            "fdny":"fire truck",
-            "firet":"fire truck",
-            "fire engin":"fire truck",
-
-            "small com veh(4 tires)":"small com veh",
-            "ford sprin":"small com veh",
-            "sprin":"small com veh",
-            "refrigerated van":"small com veh",
-            "deliv":"small com veh",
-
-            "large com veh(6 or more tires)":"large com veh",
-            "box t":"large com veh",
-            "box truck":"large com veh",
-            "tow truck / wrecker":"large com veh",
-            "chassis cab":"large com veh",
-            "beverage truck":"large com veh",
-            "flat bed":"large com veh",
-            "comme":"large com veh",
-            "pallet":"large com veh",
-            "armored truck":"large com veh",
-
-            "tanker":"tractor truck",
-            "tractor truck gasoline":"tractor truck",
-            "tractor truck diesel":"tractor truck",
-
-            "schoo":"school bus",
-            "mta b":"bus",
-            "postal bus":"bus",
-
-            "dirt bike":"motorcycle",
-            "dirtbike":"motorcycle",
-
-            "moped scoo":"moped",
-            "moped elec":"moped",
-
-            "e-bik":"e-bike",
-            "e bike":"e-bike",
-            "ebike":"e-bike",
-            "scoot":"scooter",
-            "e sco":"e-scooter",
-            "e-sco":"e-scooter",
-            "unkno":"unknown"
-        }
-        return vehicle_map
-
 
     # do the actual mapping
+    vehicle_map = vehicle_name_map()
+    
     for old, new in vehicle_map.items():
         df["VEHICLE TYPE CODE 1"] = df["VEHICLE TYPE CODE 1"].replace(old,new, regex = False)
         df["VEHICLE TYPE CODE 2"] = df["VEHICLE TYPE CODE 2"].replace(old,new, regex = False)
@@ -123,3 +45,86 @@ def fix_vehicle_names(df):
 
 
     return df
+
+
+
+        
+def vehicle_name_map():
+    vehicle_map = {
+        "bicycle":"bike",
+
+        "sedan":"passenger vehicle",
+        "station wagon/sport utility vehicle":"passenger vehicle",
+        "sport utility / station wagon":"passenger vehicle",
+        "4 dr sedan":"passenger vehicle",
+        "2 dr sedan":"passenger vehicle",
+        "convertible":"passenger vehicle",
+
+        "truck":"pick-up truck",
+        "pick up tr":"pick-up truck",
+
+        "livery vehicle":"limousine",
+        "limo":"limousine",
+        "limou":"limousine",
+
+        "posta":"mail truck",
+        "usps":"mail truck",
+        "usps mail":"mail truck",
+
+        "ambu":"ambulance",
+        "ambul":"ambulance",
+
+        "garbage tr":"garbage truck",
+        "garbage or refuse":"garbage truck",
+        "sanit":"garbage truck",
+
+        "cement tru":"cement truck",
+        "concrete mixer":"cement truck",
+
+        "dump":"dump truck",
+
+        "fire":"fire truck",
+        "fdny":"fire truck",
+        "firet":"fire truck",
+        "fire engin":"fire truck",
+
+        "small com veh(4 tires)":"small com veh",
+        "ford sprin":"small com veh",
+        "sprin":"small com veh",
+        "refrigerated van":"small com veh",
+        "deliv":"small com veh",
+
+        "large com veh(6 or more tires)":"large com veh",
+        "box t":"large com veh",
+        "box truck":"large com veh",
+        "tow truck / wrecker":"large com veh",
+        "chassis cab":"large com veh",
+        "beverage truck":"large com veh",
+        "flat bed":"large com veh",
+        "comme":"large com veh",
+        "pallet":"large com veh",
+        "armored truck":"large com veh",
+
+        "tanker":"tractor truck",
+        "tractor truck gasoline":"tractor truck",
+        "tractor truck diesel":"tractor truck",
+
+        "schoo":"school bus",
+        "mta b":"bus",
+        "postal bus":"bus",
+
+        "dirt bike":"motorcycle",
+        "dirtbike":"motorcycle",
+
+        "moped scoo":"moped",
+        "moped elec":"moped",
+
+        "e-bik":"e-bike",
+        "e bike":"e-bike",
+        "ebike":"e-bike",
+        "scoot":"scooter",
+        "e sco":"e-scooter",
+        "e-sco":"e-scooter",
+        "unkno":"unknown"
+    }
+    return vehicle_map
