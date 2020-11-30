@@ -82,6 +82,10 @@ def zip_code_and_borough_from_coords(df):
             #print(f"k = {k}, min. distance = {dist}, nearest index = {nearest_ind}, nearest zip = {nearest_zip}")
 
 
+    # make the zip code an integer
+    df["ZIP CODE"] = df["ZIP CODE"].astype(int)
+
+
     # drop all rows where there isn't a borough (and also therefore a
     # zipcode)
     mask = df["BOROUGH"].isna()
