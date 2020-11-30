@@ -11,8 +11,6 @@ def zip_code_and_borough_from_coords(df):
     ## imports
     import pandas as pd
     import numpy as np
-    import warnings
-    warnings.filterwarnings("ignore")
 
     data_path = "/Users/Mark/brainstation/capstone/nyc_bike_crash_analysis/data/"
 
