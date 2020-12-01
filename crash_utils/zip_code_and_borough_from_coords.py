@@ -1,11 +1,16 @@
 def zip_code_and_borough_from_coords(df):
 
-    """
-    Notebook to develop a function that takes in lat/lon pair and
-    returns a postal code and borough
-    
-    A fairly large number of postal codes are missing from the crash
+    """A fairly large number of postal codes and boroughs are missing from the crash
     data.
+
+    Notebook to develop a function that takes in lat/lon pair and
+    returns a postal code and borough.
+
+    Note: After filling in as many missing values as possible, this
+    function removes any rows that still do not have a zip code and
+    borough.  It is possible for such cases to occur when the crash is
+    missing coordinates.
+
     """
 
     ## imports
@@ -80,8 +85,6 @@ def zip_code_and_borough_from_coords(df):
             #print(f"k = {k}, min. distance = {dist}, nearest index = {nearest_ind}, nearest zip = {nearest_zip}")
 
 
-    # make the zip code an integer
-    df["ZIP CODE"] = df["ZIP CODE"].astype(int)
 
 
     # drop all rows where there isn't a borough (and also therefore a
@@ -89,6 +92,11 @@ def zip_code_and_borough_from_coords(df):
     mask = df["BOROUGH"].isna()
     df = df[~mask]
 
+
+    # make the zip code an integer
+    df["ZIP CODE"] = df["ZIP CODE"].astype(int)
+
+    
     ## now rename to fit in one of the five boroughs
 
     # "New York" in the zip code file is actually Manhattan
