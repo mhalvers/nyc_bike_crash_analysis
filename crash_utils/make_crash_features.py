@@ -24,9 +24,9 @@ def make_crash_features(df):
     # Let's try and set up an is_intersetion by looking at existence of
     # "ON STREET NAME" and "CROSS STREET NAME"
 
-    df["is_intersection"] = df["ON STREET NAME"].notna() & \
-                            df["CROSS STREET NAME"].notna()
-
+    is_intersection = df["ON STREET NAME"].notna() & \
+                      df["CROSS STREET NAME"].notna()
+    df.insert(4,"is_intersection",is_intersection)
 
     # drop cross street
     df.drop(columns="CROSS STREET NAME",inplace=True)
