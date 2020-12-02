@@ -27,8 +27,6 @@ def basic_cleaning(df):
 
     df.drop(columns = ["CRASH DATE", "CRASH TIME"], inplace = True)
 
-    ## some of the records have non-zero NUMBER OF MOTORIST KILLED.
-    # some of these involved motorbikes
 
     ## OFF-STREET NAME
     #list( df["OFF STREET NAME"][~df["OFF STREET NAME"].isna()] )
@@ -58,11 +56,27 @@ def basic_cleaning(df):
     df.sort_values(by = "DATETIME", inplace = True, ignore_index = True)
 
 
-    # any duplicate rows?
-    #df[df.duplicated(keep = False)]
+    ## any duplicate rows?
+    # df[df.duplicated(keep = False)]
     df.drop_duplicates(inplace = True, ignore_index = True)
 
-    ## let's trim down the data to cases when a cyclist was injured or killed
+
+    # there are cases when there are no cyclist fatalies or injuries,
+    # but there is an injury or death.  in most cases these are
+    # related to crashes involving e-bikes and motorbikes (these
+    # vehicles made it through my search query on the NYCOpenData
+    # server.
+    cyclist_mask = (df["NUMBER OF CYCLIST INJURED"] == 0) & (df["NUMBER OF CYCLIST KILLED"] == 0)
+    other_mask = (df["NUMBER OF MOTORIST INJURED"] > 0) | (df["NUMBER OF MOTORIST KILLED"] > 0)
+    mask = cyclist_mask & other_mask
+    df = df.loc[~mask,:]
+
+    # df.loc[mask,["VEHICLE TYPE CODE 1","VEHICLE TYPE CODE 2","VEHICLE TYPE CODE 3","VEHICLE TYPE CODE 4","VEHICLE TYPE CODE 5"]].head(50)
+
+
+
+    ## finally, let's trim down the data to focus on predicting the
+    ## outcome of the cyclist
     drop_cols = ["NUMBER OF PERSONS INJURED", "NUMBER OF PERSONS KILLED",
                  "NUMBER OF PEDESTRIANS INJURED", "NUMBER OF PEDESTRIANS KILLED",
                  "NUMBER OF MOTORIST INJURED", "NUMBER OF MOTORIST KILLED"]
