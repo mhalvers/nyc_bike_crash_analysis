@@ -51,6 +51,7 @@ def fix_vehicle_names(df):
         
 def vehicle_name_map():
     vehicle_map = {
+
         "bicycle":"bike",
 
         "sedan":"passenger vehicle",
@@ -113,6 +114,7 @@ def vehicle_name_map():
         "mta b":"bus",
         "postal bus":"bus",
 
+        "motorbike":"motorcycle",
         "dirt bike":"motorcycle",
         "dirtbike":"motorcycle",
 
