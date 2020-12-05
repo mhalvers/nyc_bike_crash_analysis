@@ -146,4 +146,9 @@ def make_crash_features(df):
     # replace the commas with a white space for the count vectorizer
     df["factors"] = df["factors"].str.replace(","," ")
     
+    # something about the string types is causing the sklearn
+    # CountVectorizer to choke.  solution is to change to unicode:
+    # https://stackoverflow.com/questions/39303912/tfidfvectorizer-in-scikit-learn-valueerror-np-nan-is-an-invalid-document
+    df["factors"] = df["factors"].values.astype('U')
+
     return df
