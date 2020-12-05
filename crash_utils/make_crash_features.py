@@ -28,6 +28,7 @@ def make_crash_features(df):
                       df["CROSS STREET NAME"].notna()
     df.insert(4,"is_intersection",is_intersection)
 
+
     # drop cross street
     df.drop(columns="CROSS STREET NAME",inplace=True)
 
@@ -49,27 +50,27 @@ def make_crash_features(df):
     df.loc[mask,"ON STREET NAME"] = "OTHER"
 
 
-    # now work on time/date
-    # let's get month, day of week, and hour of the day
+    # now work on time/date: get month, day of week, and hour of the
+    # day
 
     df["MONTH"] = pd.DatetimeIndex(df["DATETIME"]).month
     df["DAY_OF_WEEK"] = pd.DatetimeIndex(df["DATETIME"]).dayofweek
     df["HOUR"] = pd.DatetimeIndex(df["DATETIME"]).hour
+
 
     # now drop the datetime
     df.drop(columns = "DATETIME",inplace = True)
 
 
     # compute number of vehicles by couning non-nulls in vehicle type
-
     df["n_vehicle"] = df.loc[:,"VEHICLE TYPE CODE 1":"VEHICLE TYPE CODE 5"].notnull().sum(axis=1)
 
 
     # vehicle type will not be everything but bikes.  in other words,
-    # we only want the other vehicle (if any)
-    # that was involved in the crash.
+    # we only want the other vehicle (if any) that was involved in the
+    # crash.
 
-    # there are some cases when there are only 1 vehicle. 
+    # there are some cases when there are only 1 vehicle.
 
     #df.columns[-5:]
 
@@ -81,7 +82,6 @@ def make_crash_features(df):
 
     #sum(n1bikemask)
     #df["VEHICLE TYPE CODE 1"][df["n_vehicle"]==1].head(50)
-
 
 
     # concatenate the vehicle types, separate by comma
@@ -103,6 +103,14 @@ def make_crash_features(df):
     df.drop(columns = cols, inplace = True)
 
 
+    # first, put a dash in the spaces to keep things like "passenger vehicle" together
+    df["VEHICLES"] = df["VEHICLES"].str.replace(" ","-")
+    
+
+    # replace teh commas with a white space for the count vectorizer
+    df["VEHICLES"] = df["VEHICLES"].str.replace(","," ")
+
+    
     #_now repeat for contributing factors
 
     # number of factors (1 for each vehicle for the most part)
@@ -117,13 +125,25 @@ def make_crash_features(df):
         df.loc[df[col].isna(),col]= ""
 
 
+    # concatenate all CONTRIBUTING FACTOR text into a single column    
     new_str = df["CONTRIBUTING FACTOR VEHICLE 1"]
     for col in cols[1:]:
-        new_str = new_str.str.cat(df[col], sep = ",")    
+        new_str = new_str.str.cat(df[col], sep = ",")
 
 
+    # now drop the individual columns
     df["factors"] = new_str
     df.drop(columns = cols, inplace = True)
 
 
+    # put a dash in the spaces to keep things like "passenger vehicle" together
+    df["factors"] = df["factors"].str.replace(" ","-")
+
+
+    # replace "Driver-Inattention/Distraction" with "Driver-Inattention"
+    df["factors"] = df["factors"].str.replace("Driver-Inattention/Distraction","Driver-Inattention")
+
+    # replace the commas with a white space for the count vectorizer
+    df["factors"] = df["factors"].str.replace(","," ")
+    
     return df
