@@ -93,12 +93,12 @@ def make_crash_features(df):
     for col in cols:
         df.loc[df[col].isna(),col]= ""
 
-    # concatenate the columns    
+    # concatenate the columns
     new_str = df["VEHICLE TYPE CODE 1"]
     for col in cols[1:]:
         new_str = new_str.str.cat(df[col], sep = ",")
 
-    # add result as new column.  drop the individual columns    
+    # add result as new column.  drop the individual columns
     df["VEHICLES"] = new_str
     df.drop(columns = cols, inplace = True)
 
