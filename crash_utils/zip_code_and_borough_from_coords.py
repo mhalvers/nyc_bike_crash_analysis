@@ -94,7 +94,7 @@ def zip_code_and_borough_from_coords(df):
 
 
     # make the zip code an integer
-    df["ZIP CODE"] = df["ZIP CODE"].astype(int)
+    df["ZIP CODE"] = df["ZIP CODE"].astype(str)
 
     
     ## now rename to fit in one of the five boroughs
