@@ -8,9 +8,12 @@ figs
 # emacs
 *~
 
-# python
+# python stuff
 *ipynb
 __pycache__
+
+# but vc the following:
+!model_exploration.ipynb
 
 # Tableau
 *twb
