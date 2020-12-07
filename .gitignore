@@ -15,6 +15,7 @@ __pycache__
 
 # but vc the following:
 !model_exploration.ipynb
+!model_performance_comparison.ipynb
 
 # Tableau
 *twb
