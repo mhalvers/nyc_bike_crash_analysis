@@ -11,6 +11,7 @@ figs
 # python stuff
 *ipynb
 __pycache__
+*pkl
 
 # but vc the following:
 !model_exploration.ipynb
