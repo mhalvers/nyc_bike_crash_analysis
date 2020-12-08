@@ -4,16 +4,12 @@ def make_crash_features(df):
 
     [x] is_intersection (when ON STREET NAME and CROSS STREET NAME are non-null)
     [ ] is_day, is_dusk, is_dawn, is_night (use hour)
-    [x] hour and month
+    [x] hour, month, day of week
     [ ] is_summer, is_winter (use month) or maybe do this by season
-    [ ] get precip/weather
+    [ ] weather
     [x] number of vehicles in accident
+    [x] number of factors in accident
 
-
-    Note: Might want to note that it will be difficult to predict how many
-    vehicles (or what type of vehicle) will be involved in an accident, so
-    regressing on it might not be helpful because N_vehicles cannot be
-    predicted?
     """
 
     # the usual
@@ -125,7 +121,7 @@ def make_crash_features(df):
         df.loc[df[col].isna(),col]= ""
 
 
-    # concatenate all CONTRIBUTING FACTOR text into a single column    
+    # concatenate all CONTRIBUTING FACTORS text into a single column   
     new_str = df["CONTRIBUTING FACTOR VEHICLE 1"]
     for col in cols[1:]:
         new_str = new_str.str.cat(df[col], sep = ",")
