@@ -1,4 +1,4 @@
-def prepare_data_for_modelling(df, include_fatalities = False):
+def prepare_data_for_modelling(df, include_fatalities = False, encode_streets = False):
 
     '''Prepare the collision data for modelling:
 
@@ -56,9 +56,15 @@ def prepare_data_for_modelling(df, include_fatalities = False):
 
 
     # now one-hot encode some data
+
+    cols_to_encode = ["borough","zip code"]
+
+    if encode_streets:
+        cols_to_encode.append("on street name")
+    
     ohe = OneHotEncoder(drop = "first")
-    ohe.fit(df[["borough","zip code","on street name"]])
-    ohe_matrix = ohe.transform(df[["borough","zip code","on street name"]])
+    ohe.fit(df[cols_to_encode])
+    ohe_matrix = ohe.transform(df[cols_to_encode])
     ohe_df = pd.DataFrame.sparse.from_spmatrix(data = ohe_matrix,
                                                columns = ohe.get_feature_names())
 
