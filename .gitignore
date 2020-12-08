@@ -17,6 +17,9 @@ __pycache__
 !model_exploration.ipynb
 !model_performance_comparison.ipynb
 
+!multiclass_attempt_notebooks/multiclass_model_exploration.ipynb
+!multiclass_attempt_notebooks/multiclass_model_performance_comparison.ipynb
+
 # Tableau
 *twb
 *twbr
