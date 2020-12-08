@@ -1,7 +1,12 @@
 def prepare_data_for_modelling(df):
 
-    '''Note that this function also uses "make_crash_features.py" to create some
-    features for the fitting
+    '''Prepare the collision data for modelling:
+
+    1. Removes latitude, longitude, and collision_id
+    2. Encode the crash outcome
+    3. Runs crash_utils/make_crash_features.py
+    4. One-hot-encodes borough, zip-code, and on-street name
+    5. Generates document-term matrix for vehicles and collision factors
 
     '''
 
