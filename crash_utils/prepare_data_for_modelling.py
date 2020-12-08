@@ -1,4 +1,4 @@
-def prepare_data_for_modelling(df):
+def prepare_data_for_modelling(df, include_fatalities = False):
 
     '''Prepare the collision data for modelling:
 
@@ -20,7 +20,8 @@ def prepare_data_for_modelling(df):
     # trim more columns that aren't useful for modelling
     df.drop(columns=["LATITUDE","LONGITUDE","COLLISION_ID"],inplace = True)
 
-    # now encode the outcome:  0 = no injury, 1 = injury, 2 = fatality
+    # now encode the outcome: 0 = no injury, 1 = injury, 2 = fatality
+    # (if include_fatalities = True)
 
     # initiate column
     df["outcome"] = np.nan
@@ -33,8 +34,14 @@ def prepare_data_for_modelling(df):
     mask = df["NUMBER OF CYCLIST INJURED"] > 0
     df.loc[mask,"outcome"] = 1
 
+    # fatalities
     mask = df["NUMBER OF CYCLIST KILLED"] > 0
-    df.loc[mask,"outcome"] = 2
+
+    if include_fatalities:
+        df.loc[mask,"outcome"] = 2
+    else:
+        df = df.loc[~mask]
+
 
     df.drop(columns = ["NUMBER OF CYCLIST INJURED","NUMBER OF CYCLIST KILLED"],
             inplace = True)
@@ -42,6 +49,7 @@ def prepare_data_for_modelling(df):
 
     # make another data frame, but now with features (can be easier for some analyses)
     df = make_crash_features(df)
+
 
     # lowercase the column names
     df.columns= df.columns.str.lower()
