@@ -1,4 +1,4 @@
-def make_crash_features(df):
+def make_crash_features(df, drop_featured_columns = True):
     """
     Feature Engineering
 
@@ -26,7 +26,8 @@ def make_crash_features(df):
 
 
     # drop cross street
-    df.drop(columns="CROSS STREET NAME",inplace=True)
+    if drop_featured_columns:
+        df.drop(columns="CROSS STREET NAME",inplace=True)
 
 
     # replace missing "ON STREET NAME" with "UNKNOWN"
@@ -55,7 +56,8 @@ def make_crash_features(df):
 
 
     # now drop the datetime
-    df.drop(columns = "DATETIME",inplace = True)
+    if drop_featured_columns:
+        df.drop(columns = "DATETIME",inplace = True)
 
 
     # compute number of vehicles by couning non-nulls in vehicle type
@@ -96,17 +98,19 @@ def make_crash_features(df):
 
     # add result as new column.  drop the individual columns
     df["VEHICLES"] = new_str
-    df.drop(columns = cols, inplace = True)
 
 
     # first, put a dash in the spaces to keep things like "passenger vehicle" together
     df["VEHICLES"] = df["VEHICLES"].str.replace(" ","-")
-    
+   
 
     # replace teh commas with a white space for the count vectorizer
     df["VEHICLES"] = df["VEHICLES"].str.replace(","," ")
 
-    
+    if drop_featured_columns:
+        df.drop(columns = cols, inplace = True)
+
+   
     #_now repeat for contributing factors
 
     # number of factors (1 for each vehicle for the most part)
@@ -129,7 +133,6 @@ def make_crash_features(df):
 
     # now drop the individual columns
     df["factors"] = new_str
-    df.drop(columns = cols, inplace = True)
 
 
     # put a dash in the spaces to keep things like "passenger vehicle" together
@@ -141,10 +144,15 @@ def make_crash_features(df):
 
     # replace the commas with a white space for the count vectorizer
     df["factors"] = df["factors"].str.replace(","," ")
-    
+   
     # something about the string types is causing the sklearn
     # CountVectorizer to choke.  solution is to change to unicode:
     # https://stackoverflow.com/questions/39303912/tfidfvectorizer-in-scikit-learn-valueerror-np-nan-is-an-invalid-document
     df["factors"] = df["factors"].values.astype('U')
 
+
+    if drop_featured_columns:
+        df.drop(columns = cols, inplace = True)
+
+   
     return df
