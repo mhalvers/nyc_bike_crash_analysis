@@ -16,6 +16,7 @@ __pycache__
 # but vc the following:
 !model_exploration.ipynb
 !model_performance_comparison.ipynb
+!NYC_bike_crash_summary_stats.ipynb
 
 !multiclass_attempt_notebooks/multiclass_model_exploration.ipynb
 !multiclass_attempt_notebooks/multiclass_model_performance_comparison.ipynb
