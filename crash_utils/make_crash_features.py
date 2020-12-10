@@ -10,6 +10,9 @@ def make_crash_features(df, drop_featured_columns = True):
     [x] number of vehicles in accident
     [x] number of factors in accident
 
+    Also concatenates the CONTRIBUTING FACTOR and VEHICLE TYPE columns
+    so that the count vectorizer can easily digest them.
+
     """
 
     # the usual
@@ -33,7 +36,7 @@ def make_crash_features(df, drop_featured_columns = True):
     # replace missing "ON STREET NAME" with "UNKNOWN"
     df["ON STREET NAME"].fillna("UNKNOWN", inplace = True)
 
-    
+
     # trim the street name strings and upper
     df["ON STREET NAME"] = df["ON STREET NAME"].str.strip()
     df["ON STREET NAME"] = df["ON STREET NAME"].str.upper()
@@ -84,51 +87,46 @@ def make_crash_features(df, drop_featured_columns = True):
 
     # concatenate the vehicle types, separate by comma
 
-    # first replace NaNs with empty strings
     col_ind = df.columns.str.match("VEHICLE")
     cols = df.columns[col_ind]
-
-    for col in cols:
-        df.loc[df[col].isna(),col]= ""
 
     # concatenate the columns
     new_str = df["VEHICLE TYPE CODE 1"]
     for col in cols[1:]:
-        new_str = new_str.str.cat(df[col], sep = ",")
+        new_str = new_str.str.cat(df[col], sep = ",", na_rep = "")
 
-    # add result as new column.  drop the individual columns
+
+    # add result as new column.
     df["VEHICLES"] = new_str
 
 
     # first, put a dash in the spaces to keep things like "passenger vehicle" together
     df["VEHICLES"] = df["VEHICLES"].str.replace(" ","-")
-   
 
-    # replace teh commas with a white space for the count vectorizer
+
+    # replace the commas with a white space for the count vectorizer
     df["VEHICLES"] = df["VEHICLES"].str.replace(","," ")
 
+    # drop the individual columns
     if drop_featured_columns:
         df.drop(columns = cols, inplace = True)
 
-   
+
     #_now repeat for contributing factors
 
     # number of factors (1 for each vehicle for the most part)
     df["n_factor"] = df.loc[:,"CONTRIBUTING FACTOR VEHICLE 1":"CONTRIBUTING FACTOR VEHICLE 5"].notnull().sum(axis=1)
 
 
-    # first replace NaNs with empty strings
+    # build list of columns on which to operate
     col_ind = df.columns.str.match("CONTRIBUTING")
     cols = df.columns[col_ind]
 
-    for col in cols:
-        df.loc[df[col].isna(),col]= ""
 
-
-    # concatenate all CONTRIBUTING FACTORS text into a single column   
+    # concatenate all CONTRIBUTING FACTORS text into a single column
     new_str = df["CONTRIBUTING FACTOR VEHICLE 1"]
     for col in cols[1:]:
-        new_str = new_str.str.cat(df[col], sep = ",")
+        new_str = new_str.str.cat(df[col], sep = ",", na_rep = "")
 
 
     # now drop the individual columns
