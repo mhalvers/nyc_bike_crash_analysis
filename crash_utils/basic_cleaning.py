@@ -1,7 +1,14 @@
 def basic_cleaning(df):
 
-    """docstring
-
+    """Performs some basic cleaning steps on the NYC crash data.
+    1. Removes "LOCATION" column (redundant)
+    2. Replaces zero'ed lat/lons with NaNs
+    3. Corrects a misspelling in the contributing factors.
+    4. Converts crash date and time to datetime64 ("DATETIME")
+    5. Drops "OFF STREET NAME" column
+    6. Fixes NaNs in "NUMBER OF PERSONS KILLED" and "NUMBER OF PERSONS INJURED"
+    7. Changes a few dtypes to integers.
+    8. Sorts rows by "DATETIME"
     """
 
     # imports
@@ -33,19 +40,20 @@ def basic_cleaning(df):
 
 
     # OFF-STREET NAME
-    #list( df["OFF STREET NAME"][~df["OFF STREET NAME"].isna()] )
+    # list( df["OFF STREET NAME"][~df["OFF STREET NAME"].isna()] )
     # basically a street address if there is one.  missing 90% of the values
     df.drop(columns="OFF STREET NAME", inplace = True)
 
 
-    # NUMBER OF PERSONS INJURED and NUMBER OF PERSONS KILLED
-    # almost everything is there.
+    # NUMBER OF PERSONS INJURED and NUMBER OF PERSONS KILLED have a few nans
+    # fix them
     na_rows = df["NUMBER OF PERSONS INJURED"].isna()
     na_rows = df.loc[na_rows,:].index
 
-
-    # the first one, 21634, has no injuries or deaths.  drop!
-    df.drop(index=na_rows[0], inplace = True)
+    # the first one, 21634, has no injuries or deaths, but a bike was involved
+    # assume then this was a property damage incident (no injury or death)
+    df.loc[na_rows[0],"NUMBER OF PERSONS INJURED"] = 0
+    df.loc[na_rows[0],"NUMBER OF PERSONS KILLED"] = 0
 
 
     # the second one, 26814, has a NUMER OF CYCLIST INJURED = 1, but nothing in the 
@@ -58,12 +66,11 @@ def basic_cleaning(df):
     df["NUMBER OF PERSONS KILLED"] = df["NUMBER OF PERSONS KILLED"].astype("int")
 
 
-    ## sort the collisions by timestamp
+    # sort the collisions by timestamp
     df.sort_values(by = "DATETIME", inplace = True, ignore_index = True)
 
 
-    ## any duplicate rows?
-    # df[df.duplicated(keep = False)]
+    # any duplicate rows?
     df.drop_duplicates(inplace = True, ignore_index = True)
 
 
@@ -78,8 +85,8 @@ def basic_cleaning(df):
     df = df.loc[~mask,:]
 
 
-    ## finally, let's trim down the data to focus on predicting the
-    ## outcome of the cyclist
+    # finally, let's trim down the data to focus on predicting the
+    # outcome of the cyclist
     drop_cols = ["NUMBER OF PERSONS INJURED", "NUMBER OF PERSONS KILLED",
                  "NUMBER OF PEDESTRIANS INJURED", "NUMBER OF PEDESTRIANS KILLED",
                  "NUMBER OF MOTORIST INJURED", "NUMBER OF MOTORIST KILLED"]
@@ -87,4 +94,3 @@ def basic_cleaning(df):
     df.drop(columns=drop_cols, inplace=True)
 
     return df
-
