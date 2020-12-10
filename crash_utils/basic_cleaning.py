@@ -74,23 +74,4 @@ def basic_cleaning(df):
     df.drop_duplicates(inplace = True, ignore_index = True)
 
 
-    # there are cases when there are no cyclist fatalies or injuries,
-    # but there is an injury or death.  in most cases these are
-    # related to crashes involving e-bikes and motorbikes (these
-    # vehicles made it through my search query on the NYCOpenData
-    # server.
-    cyclist_mask = (df["NUMBER OF CYCLIST INJURED"] == 0) & (df["NUMBER OF CYCLIST KILLED"] == 0)
-    other_mask = (df["NUMBER OF MOTORIST INJURED"] > 0) | (df["NUMBER OF MOTORIST KILLED"] > 0)
-    mask = cyclist_mask & other_mask
-    df = df.loc[~mask,:]
-
-
-    # finally, let's trim down the data to focus on predicting the
-    # outcome of the cyclist
-    drop_cols = ["NUMBER OF PERSONS INJURED", "NUMBER OF PERSONS KILLED",
-                 "NUMBER OF PEDESTRIANS INJURED", "NUMBER OF PEDESTRIANS KILLED",
-                 "NUMBER OF MOTORIST INJURED", "NUMBER OF MOTORIST KILLED"]
-
-    df.drop(columns=drop_cols, inplace=True)
-
     return df
