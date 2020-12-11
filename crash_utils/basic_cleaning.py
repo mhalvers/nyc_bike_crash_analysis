@@ -1,14 +1,16 @@
 def basic_cleaning(df):
 
     """Performs some basic cleaning steps on the NYC crash data.
-    1. Removes "LOCATION" column (redundant)
-    2. Replaces zero'ed lat/lons with NaNs
-    3. Corrects a misspelling in the contributing factors.
-    4. Converts crash date and time to datetime64 ("DATETIME")
-    5. Drops "OFF STREET NAME" column
-    6. Fixes NaNs in "NUMBER OF PERSONS KILLED" and "NUMBER OF PERSONS INJURED"
-    7. Changes a few dtypes to integers.
-    8. Sorts rows by "DATETIME"
+    1.  Removes "LOCATION" column (redundant)
+    2.  Replaces zero'ed lat/lons with NaNs
+    3.  Corrects a misspelling in the contributing factors.
+    4.  Converts crash date and time to datetime64 ("DATETIME")
+    5.  Drops "OFF STREET NAME" column
+    6.  Fixes NaNs in "NUMBER OF PERSONS KILLED" and "NUMBER OF PERSONS INJURED"
+    7.  Changes a few dtypes to integers.
+    8.  Removes rows with no cyclist involvement.
+    9.  Sorts rows by "DATETIME"
+    10. Drops duplicate rows
     """
 
     # imports
@@ -56,7 +58,7 @@ def basic_cleaning(df):
     df.loc[na_rows[0],"NUMBER OF PERSONS KILLED"] = 0
 
 
-    # the second one, 26814, has a NUMER OF CYCLIST INJURED = 1, but nothing in the 
+    # the second one, 26814, has a NUMER OF CYCLIST INJURED = 1, but nothing in the
     df.loc[na_rows[1],"NUMBER OF PERSONS INJURED"] = 1
     df.loc[na_rows[1],"NUMBER OF PERSONS KILLED"] = 0
 
@@ -66,6 +68,34 @@ def basic_cleaning(df):
     df["NUMBER OF PERSONS KILLED"] = df["NUMBER OF PERSONS KILLED"].astype("int")
 
 
+    # remove instances when no bicyclist was involved.  here we state
+    # that "bike" must be mentioned in the "VEHICLES" column, OR that
+    # there must have been a cyclist injuries or fatality
+
+    # easiest to search all columsn of VEHICLE TYPE by cat'ing them first
+    col_ind = df.columns.str.match("VEHICLE")
+    cols = df.columns[col_ind]
+
+    new_str = df["VEHICLE TYPE CODE 1"]
+    for col in cols[1:]:
+        new_str = new_str.str.cat(df[col], sep = ",", na_rep = "")
+
+
+    # what rows contain "bike"?
+    has_bike = new_str.str.contains("bike")
+
+
+    # maybe "bike" was recorded in vehicle types.  also check if there
+    # is a cyclist injury or death
+    cyclist_mask = (df["NUMBER OF CYCLIST INJURED"] > 0) | (df["NUMBER OF CYCLIST KILLED"] > 0)
+
+    # combine the masks
+    the_mask = has_bike | cyclist_mask
+
+    # keep only the desired rows
+    df = df.loc[the_mask]
+    
+    
     # sort the collisions by timestamp
     df.sort_values(by = "DATETIME", inplace = True, ignore_index = True)
 
