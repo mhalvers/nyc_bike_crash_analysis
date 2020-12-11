@@ -33,8 +33,8 @@ def make_crash_features(df, drop_featured_columns = True):
         df.drop(columns="CROSS STREET NAME",inplace=True)
 
 
-    # replace missing "ON STREET NAME" with "UNKNOWN"
-    df["ON STREET NAME"].fillna("UNKNOWN", inplace = True)
+    # replace missing "ON STREET NAME" with "MISSING"
+    df["ON STREET NAME"].fillna("MISSING", inplace = True)
 
 
     # trim the street name strings and upper
