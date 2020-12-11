@@ -3,6 +3,7 @@ def prepare_data_for_modelling(df, include_fatalities = False, encode_streets = 
     '''Prepare the collision data for modelling:
 
     1. Removes latitude, longitude, and collision_id
+    2. Removes 
     2. Encode the crash outcome
     3. Runs crash_utils/make_crash_features.py
     4. One-hot-encodes borough, zip-code, and on-street name
@@ -47,7 +48,16 @@ def prepare_data_for_modelling(df, include_fatalities = False, encode_streets = 
             inplace = True)
 
 
-    # make another data frame, but now with features (can be easier for some analyses)
+    # finally, let's trim down the data to focus on predicting the
+    # outcome of the cyclist
+    drop_cols = ["NUMBER OF PERSONS INJURED", "NUMBER OF PERSONS KILLED",
+                 "NUMBER OF PEDESTRIANS INJURED", "NUMBER OF PEDESTRIANS KILLED",
+                 "NUMBER OF MOTORIST INJURED", "NUMBER OF MOTORIST KILLED"]
+
+    df.drop(columns=drop_cols, inplace=True)
+
+   
+    # compute features useful for modelling with custom function
     df = make_crash_features(df)
 
 
@@ -61,7 +71,7 @@ def prepare_data_for_modelling(df, include_fatalities = False, encode_streets = 
 
     if encode_streets:
         cols_to_encode.append("on street name")
-    
+
     ohe = OneHotEncoder(drop = "first")
     ohe.fit(df[cols_to_encode])
     ohe_matrix = ohe.transform(df[cols_to_encode])
