@@ -85,7 +85,7 @@ def make_crash_features(df, drop_featured_columns = True):
     #df["VEHICLE TYPE CODE 1"][df["n_vehicle"]==1].head(50)
 
 
-    # concatenate the vehicle types, separate by comma
+    # concatenate the vehicle types into a single column
 
     col_ind = df.columns.str.match("VEHICLE")
     cols = df.columns[col_ind]
@@ -112,7 +112,13 @@ def make_crash_features(df, drop_featured_columns = True):
         df.drop(columns = cols, inplace = True)
 
 
-    #_now repeat for contributing factors
+    # there are several cases when VEHICLES contains the same two
+    # vehicles, but they are ordered differently.  for example, “taxi
+    # bike” and “bike taxi”. fix by alphabetizing
+    df["VEHICLES"] = df["VEHICLES"].str.split().apply(sorted,reverse=True).str.join(sep=" ")
+
+   
+    # now concatenate the contributing factors
 
     # number of factors (1 for each vehicle for the most part)
     df["n_factor"] = df.loc[:,"CONTRIBUTING FACTOR VEHICLE 1":"CONTRIBUTING FACTOR VEHICLE 5"].notnull().sum(axis=1)
