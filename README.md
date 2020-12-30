@@ -6,7 +6,7 @@ This repo contains python notebooks and code to analyze NYPD records of bike cra
 
 # Report
 
-A brief report summarizing the findings of the analysis can be found in markdown format [here](nyc_bike_crash_analysis/report/README.md).
+A brief report summarizing the findings of the analysis can be found in markdown format [here](https://github.com/mhalvers/nyc_bike_crash_analysis/tree/main/report).
 
 ## Data
 
