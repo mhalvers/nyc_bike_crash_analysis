@@ -140,7 +140,7 @@ the summary map in
 Fig. <a href="#fig:outcome_map" data-reference-type="ref" data-reference="fig:outcome_map">1</a>.
 
 <figure>
-<img src="../nyc_bike_crash_analysis/figs/Outcome_map.png" id="fig:outcome_map" style="width:48.0%" alt="Locations of bike collisions in New York City and surrounding areas. Crashes that did not result in an injury are plotted with small blue dots, however they are not easily visible given the density of events involving injury." /><figcaption aria-hidden="true">Locations of bike collisions in New York City and surrounding areas. Crashes that did not result in an injury are plotted with small blue dots, however they are not easily visible given the density of events involving injury.</figcaption>
+<img src="../figs/Outcome_map.png" id="fig:outcome_map" style="width:48.0%" alt="Locations of bike collisions in New York City and surrounding areas. Crashes that did not result in an injury are plotted with small blue dots, however they are not easily visible given the density of events involving injury." /><figcaption aria-hidden="true">Locations of bike collisions in New York City and surrounding areas. Crashes that did not result in an injury are plotted with small blue dots, however they are not easily visible given the density of events involving injury.</figcaption>
 </figure>
 
 Breaking down the crash outcomes by GPS coordinates, street name, and
@@ -203,7 +203,7 @@ injuries were aggregated by month and plotted as a time series
 (Fig. <a href="#fig:timeseries" data-reference-type="ref" data-reference="fig:timeseries">2</a>).
 
 <figure>
-<img src="../nyc_bike_crash_analysis/figs/time_series.png" id="fig:timeseries" style="width:50.0%" alt="Monthly sum of injuries (top panel) and fatalities (bottom panel). Note the sharp drop in injuries in spring 2020 when COVID containment measures went into effect." /><figcaption aria-hidden="true">Monthly sum of injuries (top panel) and fatalities (bottom panel). Note the sharp drop in injuries in spring 2020 when COVID containment measures went into effect.</figcaption>
+<img src="../figs/time_series.png" id="fig:timeseries" style="width:50.0%" alt="Monthly sum of injuries (top panel) and fatalities (bottom panel). Note the sharp drop in injuries in spring 2020 when COVID containment measures went into effect." /><figcaption aria-hidden="true">Monthly sum of injuries (top panel) and fatalities (bottom panel). Note the sharp drop in injuries in spring 2020 when COVID containment measures went into effect.</figcaption>
 </figure>
 
 The monthly total number of crashes resulting in injury increases
@@ -218,7 +218,7 @@ down by hour and summed over the full data record
 (Fig. <a href="#fig:hours" data-reference-type="ref" data-reference="fig:hours">3</a>).
 
 <figure>
-<img src="../nyc_bike_crash_analysis/figs/hourly_breakdown.png" id="fig:hours" style="width:50.0%" alt="Total number of injuries (top panel) and fatalities (bottom panel) broken down by hour of the day." /><figcaption aria-hidden="true">Total number of injuries (top panel) and fatalities (bottom panel) broken down by hour of the day.</figcaption>
+<img src="../figs/hourly_breakdown.png" id="fig:hours" style="width:50.0%" alt="Total number of injuries (top panel) and fatalities (bottom panel) broken down by hour of the day." /><figcaption aria-hidden="true">Total number of injuries (top panel) and fatalities (bottom panel) broken down by hour of the day.</figcaption>
 </figure>
 
 As one might expect, there are very few crashes late in the night and
