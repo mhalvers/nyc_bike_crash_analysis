@@ -1,6 +1,13 @@
 # folders
 data
-figs
+
+# figures
+*.png
+
+# but keep these figures for the report
+!figs/Outcome_map.png
+!figs/time_series.png
+!figs/hourly_breakdown.png
 
 # OS X
 .DS_Store
