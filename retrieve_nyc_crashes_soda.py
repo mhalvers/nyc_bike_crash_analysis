@@ -1,26 +1,28 @@
-#!/usr/bin/env python
+def retrieve_nyc_crashes_soda(my_token = None, limit = None):
 
-# make sure to install these packages before running:
-# pip install pandas
-# pip install sodapy
+    """Retrieve NYC motor vehicle crash data from NYC Open Data using the
+    sodapy, the python client for the Socrata Open Data API
 
-import pandas as pd
-from sodapy import Socrata
+    Returns data in a pandas dataframe
 
-# Unauthenticated client only works with public data sets. Note 'None'
-# in place of application token, and no username or password:
-client = Socrata("data.cityofnewyork.us", None)
+    """
+  
+    import pandas as pd
+    from sodapy import Socrata
 
-# Example authenticated client (needed for non-public datasets):
-# client = Socrata(data.cityofnewyork.us,
-#                  MyAppToken,
-#                  userame="user@example.com",
-#                  password="AFakePassword")
 
-# First 2000 results, returned as JSON from API / converted to Python list of
-# dictionaries by sodapy.
-results = client.get("h9gi-nx95", limit=2000)
+    # set up the Socrata client
+    # use custom token to remove throttling):
+    client = Socrata("data.cityofnewyork.us", my_token)
 
-# Convert to pandas DataFrame
-results_df = pd.DataFrame.from_records(results)
 
+    # results returned as JSON from API / converted to Python list of
+    # dictionaries by sodapy.
+    results = client.get("h9gi-nx95", limit=limit)
+
+
+    # Convert to pandas DataFrame
+    df = pd.DataFrame.from_records(results)
+
+
+    return df
