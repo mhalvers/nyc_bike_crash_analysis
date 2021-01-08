@@ -19,7 +19,7 @@ def zip_code_and_borough_from_coords(df):
 
     data_path = "data/"
 
- 
+
     # crash data for testing as script
     # read the crash data, but only the relevant columns
     #data_file_with_path = data_path + "Motor_Vehicle_Collisions_-_Crashes.csv"
@@ -49,10 +49,10 @@ def zip_code_and_borough_from_coords(df):
 
 
     # get indices of crashes missing a zip code
-    missing_mask = df["zip_code"].isnull().to_numpy()
+    missing_mask = df["zip code"].isnull().to_numpy()
     missing_ind = np.nonzero(missing_mask)[0]
 
-   
+
     # run through all of the instances of a missing zip code in crash data
     # frame find the distance between all of the NY zip code coordinates
     # and the crash coordinates find the nearest zip code to the crash
@@ -64,7 +64,7 @@ def zip_code_and_borough_from_coords(df):
     # as the borough.
 
     borough_col = np.argwhere(df.columns == "borough")[0]
-    zip_col = np.argwhere(df.columns == "zip_code")[0]
+    zip_col = np.argwhere(df.columns == "zip code")[0]
 
     for k in missing_ind:
 
@@ -94,9 +94,9 @@ def zip_code_and_borough_from_coords(df):
 
 
     # make the zip code an integer
-    df["zip_code"] = df["zip_code"].astype(str)
+    df["zip code"] = df["zip code"].astype(str)
 
-    
+
     ## now rename to fit in one of the five boroughs
 
     # "New York" in the zip code file is actually Manhattan

@@ -13,16 +13,16 @@ def fix_vehicle_names(df):
 
 
     # generate list of columns on which to operate
-    col_ind = df.columns.str.match("vehicle_type")
+    col_ind = df.columns.str.match("vehicle type")
     cols = df.columns[col_ind].tolist()
-    
+
 
     # first lower-case and trim trailing and leading white space everything
     for col in cols:
         df[col] = df[col].str.lower()
         df[col] = df[col].str.strip()
 
-    
+
     # do the actual mapping
     vehicle_map = vehicle_name_map()
 
@@ -31,14 +31,14 @@ def fix_vehicle_names(df):
         for old, new in vehicle_map.items():
             df[col] = df[col].replace(old,new, regex = False)
 
-    
+
     # now fill in everything with fewer than 5 incidents in vehicle
     # column 1 and everything with fewer than 3 incidents in vehicle
     # column 2 with "other".
-    strs_to_other_1 = df["vehicle_type_code_1"].value_counts()
+    strs_to_other_1 = df["vehicle type code 1"].value_counts()
     strs_to_other_1 = strs_to_other_1[strs_to_other_1<5]
 
-    strs_to_other_2 = df["vehicle_type_code_2"].value_counts()
+    strs_to_other_2 = df["vehicle type code 2"].value_counts()
     strs_to_other_2 = strs_to_other_2[strs_to_other_2<3]
 
     strs_to_other = pd.concat([strs_to_other_1,strs_to_other_2]).index
