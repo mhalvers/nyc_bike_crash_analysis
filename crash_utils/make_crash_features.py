@@ -25,7 +25,12 @@ def make_crash_features(df, drop_featured_columns = True):
 
     is_intersection = df["on street name"].notna() & \
                       df["cross street name"].notna()
-    df.insert(4,"is_intersection",is_intersection)
+    df["is_intersection"] = is_intersection
+
+
+    # replace missing streets with "missing"
+    df["on street name"].fillna("missing", inplace = True)
+    df["cross street name"].fillna("missing", inplace=True)
 
 
     # drop cross street
@@ -33,11 +38,7 @@ def make_crash_features(df, drop_featured_columns = True):
         df.drop(columns="cross street name",inplace=True)
 
 
-    # replace missing "ON STREET NAME" with "MISSING"
-    df["on street name"].fillna("missing", inplace = True)
-
-
-    # trim the street name strings and upper
+    # trim the street name strings
     df["on street name"] = df["on street name"].str.strip()
 
 
