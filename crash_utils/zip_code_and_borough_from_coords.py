@@ -17,9 +17,9 @@ def zip_code_and_borough_from_coords(df):
     import pandas as pd
     import numpy as np
 
-    data_path = "/Users/Mark/brainstation/capstone/nyc_bike_crash_analysis/data/"
+    data_path = "data/"
 
-    
+ 
     # crash data for testing as script
     # read the crash data, but only the relevant columns
     #data_file_with_path = data_path + "Motor_Vehicle_Collisions_-_Crashes.csv"
