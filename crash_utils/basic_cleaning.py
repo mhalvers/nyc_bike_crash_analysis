@@ -18,6 +18,10 @@ def basic_cleaning(df):
     import numpy as np
 
 
+    # order the columns alphabetically
+    df.sort_index(axis=1, inplace=True)
+
+
     # first, remove LOCATION.  it is redundant with LATITUDE and LONGITUDE
     df.drop(columns = "location", inplace = True)
 
@@ -47,9 +51,13 @@ def basic_cleaning(df):
     df.drop(columns="off street name", inplace = True)
 
 
-    # captialize the street names
+    # title-ize the street names
     df["on street name"] = df["on street name"].str.title()
     df["cross street name"] = df["cross street name"].str.title()
+
+
+    # capitalize the borough names
+    df["borough"] = df["borough"].str.capitalize()
 
 
     # NUMBER OF PERSONS INJURED and NUMBER OF PERSONS KILLED have a few nans
