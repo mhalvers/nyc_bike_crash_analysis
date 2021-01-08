@@ -34,12 +34,11 @@ def make_crash_features(df, drop_featured_columns = True):
 
 
     # replace missing "ON STREET NAME" with "MISSING"
-    df["on street name"].fillna("MISSING", inplace = True)
+    df["on street name"].fillna("missing", inplace = True)
 
 
     # trim the street name strings and upper
     df["on street name"] = df["on street name"].str.strip()
-    df["on street name"] = df["on street name"].str.upper()
 
 
     # let's replace all street names with very few incidents with "other"
@@ -47,15 +46,15 @@ def make_crash_features(df, drop_featured_columns = True):
     strs_to_other = df["on street name"].value_counts().index[mask]
 
     mask = df["on street name"].isin(strs_to_other)
-    df.loc[mask,"on street name"] = "OTHER"
+    df.loc[mask,"on street name"] = "other"
 
 
     # now work on time/date: get month, day of week, and hour of the
     # day
 
-    df["month"] = pd["datetime"].dt.month
-    df["DAY_OF_WEEK"] = pd["datetime"].dayofweek
-    df["HOUR"] = pd["datetime"].hour
+    df["month"] = df["datetime"].dt.month
+    df["day of week"] = df["datetime"].dt.dayofweek
+    df["hour"] = df["datetime"].dt.hour
 
 
     # now drop the datetime

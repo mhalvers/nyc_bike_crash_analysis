@@ -32,8 +32,8 @@ def basic_cleaning(df):
     mask = df["contributing factor vehicle 1"].str.fullmatch("illnes", case=False)
     mask.fillna(False,inplace = True)
     df.loc[mask,"contributing factor vehicle 1"] = "Illness"
-    
-    
+
+
     # change date and time to datetime64
     crash_dt = df["crash date"] + " " + df["crash time"]
     crash_dt = pd.to_datetime(crash_dt)
@@ -45,6 +45,11 @@ def basic_cleaning(df):
     # list( df["off street name"][~df["off street name"].isna()] )
     # basically a street address if there is one.  missing 90% of the values
     df.drop(columns="off street name", inplace = True)
+
+
+    # captialize the street names
+    df["on street name"] = df["on street name"].str.title()
+    df["cross street name"] = df["cross street name"].str.title()
 
 
     # NUMBER OF PERSONS INJURED and NUMBER OF PERSONS KILLED have a few nans
@@ -94,8 +99,8 @@ def basic_cleaning(df):
 
     # keep only the desired rows
     df = df.loc[the_mask]
-    
-    
+
+
     # sort the collisions by timestamp
     df.sort_values(by = "datetime", inplace = True, ignore_index = True)
 
