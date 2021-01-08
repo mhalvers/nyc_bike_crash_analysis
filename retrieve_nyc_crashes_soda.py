@@ -1,4 +1,4 @@
-def retrieve_nyc_crashes_soda(token = None, query = None, write_output = False):
+def retrieve_nyc_crashes_soda(token = None, query = None, output_file = None):
 
     """Retrieve NYC motor vehicle crash data from NYC Open Data using the
     sodapy, the python client for the Socrata Open Data API.  Returns
@@ -22,8 +22,6 @@ def retrieve_nyc_crashes_soda(token = None, query = None, write_output = False):
 
     Note we have to specify a very high limit because the query
     defaults to 1000 records.
-
-
 
     """
 
@@ -56,10 +54,6 @@ def retrieve_nyc_crashes_soda(token = None, query = None, write_output = False):
                 VEHICLE_TYPE_CODE_5 = 'Bike' OR VEHICLE_TYPE_CODE_5 = 'BICYCLE'
                 limit 1000000
                 """
-    else:
-        query = "limit 1000000"
-
-
 
 
     # results returned as JSON from API / converted to Python list of
@@ -74,8 +68,15 @@ def retrieve_nyc_crashes_soda(token = None, query = None, write_output = False):
     print(f"Retrieved {df.shape[0]} crashes involving bicycles")
 
 
-    if write_output:
-        
+    # sodapy goofs up a few column names
+    df.rename(columns={"vehicle_type_code1": "vehicle_type_code_1",
+                       "vehicle_type_code2": "vehicle_type_code_2"},inplace=True)
 
-    
+
+   
+    if output_file is not None:
+        df.to_csv(path_or_buf = output_file, index=False)
+        print(f"Wrote file: {output_file}")
+
+
     return df
