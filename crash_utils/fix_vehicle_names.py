@@ -5,7 +5,7 @@ def fix_vehicle_names(df):
     import numpy as np
 
     ## for testing
-    #data_path = "/Users/Mark/brainstation/capstone/nyc_bike_crash_analysis/data/"
+    #data_path = "data/"
     #data_file_with_path = data_path + "Motor_Vehicle_Collisions_-_Crashes.csv"
     #df = pd.read_csv(data_file_with_path)
 
@@ -20,21 +20,21 @@ def fix_vehicle_names(df):
     vehicle_map = vehicle_name_map()
     
     for old, new in vehicle_map.items():
-        df["VEHICLE TYPE CODE 1"] = df["VEHICLE TYPE CODE 1"].replace(old,new, regex = False)
-        df["VEHICLE TYPE CODE 2"] = df["VEHICLE TYPE CODE 2"].replace(old,new, regex = False)
-        df["VEHICLE TYPE CODE 3"] = df["VEHICLE TYPE CODE 3"].replace(old,new, regex = False)
-        df["VEHICLE TYPE CODE 4"] = df["VEHICLE TYPE CODE 4"].replace(old,new, regex = False)
-        df["VEHICLE TYPE CODE 5"] = df["VEHICLE TYPE CODE 5"].replace(old,new, regex = False)
+        df["vehicle_type_code_1"] = df["vehicle_type_code_1"].replace(old,new, regex = False)
+        df["vehicle_type_code_2"] = df["vehicle_type_code_2"].replace(old,new, regex = False)
+        df["vehicle_type_code_3"] = df["vehicle_type_code_3"].replace(old,new, regex = False)
+        df["vehicle_type_code_4"] = df["vehicle_type_code_4"].replace(old,new, regex = False)
+        df["vehicle_type_code_5"] = df["vehicle_type_code_5"].replace(old,new, regex = False)
 
 
     
     # now fill in everything with fewer than 5 incidents in Vehicle column 1
     # and everything with fewer than 3 incidents in Vehicle colkumn 2
     # with "other".
-    strs_to_other_1 = df["VEHICLE TYPE CODE 1"].value_counts()
+    strs_to_other_1 = df["vehicle_type_code_1"].value_counts()
     strs_to_other_1 = strs_to_other_1[strs_to_other_1<5]
 
-    strs_to_other_2 = df["VEHICLE TYPE CODE 2"].value_counts()
+    strs_to_other_2 = df["vehicle_type_code_2"].value_counts()
     strs_to_other_2 = strs_to_other_2[strs_to_other_2<3]
 
     strs_to_other = pd.concat([strs_to_other_1,strs_to_other_2]).index
