@@ -30,15 +30,15 @@ def zip_code_and_borough_from_coords(df):
 
 
     # there are some zeros in the positions.  nan them
-    mask = (df["LATITUDE"] < 35) | (df["LONGITUDE"]>-65)
-    df.loc[mask,"LATITUDE"] = np.nan
-    df.loc[mask,"LONGITUDE"] = np.nan
+    mask = (df["latitude"] < 35) | (df["longitude"]>-65)
+    df.loc[mask,"latitude"] = np.nan
+    df.loc[mask,"longitude"] = np.nan
 
 
     # the NY state file contains zip codes for all of NY state.  subset to
     # the region we need:
-    minlat, maxlat = np.min(df["LATITUDE"]), np.max(df["LATITUDE"])
-    minlon, maxlon = np.min(df["LONGITUDE"]), np.max(df["LONGITUDE"])
+    minlat, maxlat = np.min(df["latitude"]), np.max(df["latitude"])
+    minlon, maxlon = np.min(df["longitude"]), np.max(df["longitude"])
 
 
     latlonmask = (ny["Longitude"] >= minlon) & (ny["Longitude"] <= maxlon)
@@ -49,10 +49,10 @@ def zip_code_and_borough_from_coords(df):
 
 
     # get indices of crashes missing a zip code
-    missing_mask = df["ZIP CODE"].isnull().to_numpy()
+    missing_mask = df["zip_code"].isnull().to_numpy()
     missing_ind = np.nonzero(missing_mask)[0]
 
-    
+   
     # run through all of the instances of a missing zip code in crash data
     # frame find the distance between all of the NY zip code coordinates
     # and the crash coordinates find the nearest zip code to the crash
@@ -63,13 +63,13 @@ def zip_code_and_borough_from_coords(df):
     # missing a borough so use the "city" column of the NY zip code data
     # as the borough.
 
-    borough_col = np.argwhere(df.columns == "BOROUGH")[0]
-    zip_col = np.argwhere(df.columns == "ZIP CODE")[0]
+    borough_col = np.argwhere(df.columns == "borough")[0]
+    zip_col = np.argwhere(df.columns == "zip_code")[0]
 
     for k in missing_ind:
 
-        dist = (df.iloc[k]["LONGITUDE"] - ny["Longitude"])**2 + \
-               (df.iloc[k]["LATITUDE"] - ny["Latitude"])**2
+        dist = (df.iloc[k]["longitude"] - ny["Longitude"])**2 + \
+               (df.iloc[k]["latitude"] - ny["Latitude"])**2
         dist = dist.to_numpy()
 
         nearest_ind = np.argmin(dist)
@@ -89,36 +89,36 @@ def zip_code_and_borough_from_coords(df):
 
     # drop all rows where there isn't a borough (and also therefore a
     # zipcode)
-    mask = df["BOROUGH"].isna()
+    mask = df["borough"].isna()
     df = df[~mask]
 
 
     # make the zip code an integer
-    df["ZIP CODE"] = df["ZIP CODE"].astype(str)
+    df["zip_code"] = df["zip_code"].astype(str)
 
     
     ## now rename to fit in one of the five boroughs
 
     # "New York" in the zip code file is actually Manhattan
-    df["BOROUGH"] = df["BOROUGH"].str.replace("New York","MANHATTAN")
+    df["borough"] = df["borough"].str.replace("New York","MANHATTAN")
 
     # the NY zip code "cities" were not all-caps
-    df["BOROUGH"] = df["BOROUGH"].str.replace("Bronx","BRONX")
-    df["BOROUGH"] = df["BOROUGH"].str.replace("Brooklyn","BROOKLYN")
-    df["BOROUGH"] = df["BOROUGH"].str.replace("Staten Island","STATEN ISLAND")
+    df["borough"] = df["borough"].str.replace("Bronx","BRONX")
+    df["borough"] = df["borough"].str.replace("Brooklyn","BROOKLYN")
+    df["borough"] = df["borough"].str.replace("Staten Island","STATEN ISLAND")
 
     # all of the others appear to be in Queens
     #boroughs = ('STATEN ISLAND', 'BRONX', 'QUEENS', 'MANHATTAN','BROOKLYN')
     #mask = False * len(df)
     #for borough in boroughs:
-    #    mask = mask | (df["BOROUGH"] == borough)
+    #    mask = mask | (df["borough"] == borough)
     #mask = ~mask
 
     # klugey, but find all the non-boroughs just by looking for
     # strings that are not all upper-case
-    mask = df["BOROUGH"].str.isupper()
+    mask = df["borough"].str.isupper()
     mask = ~mask
 
-    df.loc[mask,"BOROUGH"] = "QUEENS"
+    df.loc[mask,"borough"] = "QUEENS"
 
     return df
