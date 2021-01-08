@@ -4,33 +4,37 @@ def fix_vehicle_names(df):
     import pandas as pd
     import numpy as np
 
+
     ## for testing
     #data_path = "data/"
     #data_file_with_path = data_path + "Motor_Vehicle_Collisions_-_Crashes.csv"
+    #data_file_with_path = data_path + "nyc_bike_crashes.csv"
     #df = pd.read_csv(data_file_with_path)
 
 
+    # generate list of columns on which to operate
+    col_ind = df.columns.str.match("vehicle_type")
+    cols = df.columns[col_ind].tolist()
+    
+
     # first lower-case and trim trailing and leading white space everything
-    for col in df.columns[-5:]:
+    for col in cols:
         df[col] = df[col].str.lower()
         df[col] = df[col].str.strip()
 
-
+    
     # do the actual mapping
     vehicle_map = vehicle_name_map()
-    
-    for old, new in vehicle_map.items():
-        df["vehicle_type_code_1"] = df["vehicle_type_code_1"].replace(old,new, regex = False)
-        df["vehicle_type_code_2"] = df["vehicle_type_code_2"].replace(old,new, regex = False)
-        df["vehicle_type_code_3"] = df["vehicle_type_code_3"].replace(old,new, regex = False)
-        df["vehicle_type_code_4"] = df["vehicle_type_code_4"].replace(old,new, regex = False)
-        df["vehicle_type_code_5"] = df["vehicle_type_code_5"].replace(old,new, regex = False)
 
 
+    for col in cols:
+        for old, new in vehicle_map.items():
+            df[col] = df[col].replace(old,new, regex = False)
+
     
-    # now fill in everything with fewer than 5 incidents in Vehicle column 1
-    # and everything with fewer than 3 incidents in Vehicle colkumn 2
-    # with "other".
+    # now fill in everything with fewer than 5 incidents in vehicle
+    # column 1 and everything with fewer than 3 incidents in vehicle
+    # column 2 with "other".
     strs_to_other_1 = df["vehicle_type_code_1"].value_counts()
     strs_to_other_1 = strs_to_other_1[strs_to_other_1<5]
 
@@ -39,9 +43,9 @@ def fix_vehicle_names(df):
 
     strs_to_other = pd.concat([strs_to_other_1,strs_to_other_2]).index
     
-    for cols in df.columns[-5:]:
-        mask = df[cols].isin(strs_to_other)
-        df.loc[mask,cols] = "other"
+    for col in cols:
+        mask = df[col].isin(strs_to_other)
+        df.loc[mask,col] = "other"
 
 
     return df
