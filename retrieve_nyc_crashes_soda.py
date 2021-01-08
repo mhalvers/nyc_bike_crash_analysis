@@ -73,7 +73,10 @@ def retrieve_nyc_crashes_soda(token = None, query = None, output_file = None):
                        "vehicle_type_code2": "vehicle_type_code_2"},inplace=True)
 
 
-   
+    # remove underscores from column names
+    df.columns = df.columns.str.replace('_', ' ')
+
+
     if output_file is not None:
         df.to_csv(path_or_buf = output_file, index=False)
         print(f"Wrote file: {output_file}")
