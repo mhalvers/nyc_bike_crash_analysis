@@ -23,48 +23,51 @@ def make_crash_features(df, drop_featured_columns = True):
     # Let's try and set up an is_intersetion by looking at existence of
     # "ON STREET NAME" and "CROSS STREET NAME"
 
-    is_intersection = df["ON STREET NAME"].notna() & \
-                      df["CROSS STREET NAME"].notna()
+    is_intersection = df["on street name"].notna() & \
+                      df["cross street name"].notna()
     df.insert(4,"is_intersection",is_intersection)
 
 
     # drop cross street
     if drop_featured_columns:
-        df.drop(columns="CROSS STREET NAME",inplace=True)
+        df.drop(columns="cross street name",inplace=True)
 
 
     # replace missing "ON STREET NAME" with "MISSING"
-    df["ON STREET NAME"].fillna("MISSING", inplace = True)
+    df["on street name"].fillna("MISSING", inplace = True)
 
 
     # trim the street name strings and upper
-    df["ON STREET NAME"] = df["ON STREET NAME"].str.strip()
-    df["ON STREET NAME"] = df["ON STREET NAME"].str.upper()
+    df["on street name"] = df["on street name"].str.strip()
+    df["on street name"] = df["on street name"].str.upper()
 
 
     # let's replace all street names with very few incidents with "other"
-    mask = df["ON STREET NAME"].value_counts().values < 10
-    strs_to_other = df["ON STREET NAME"].value_counts().index[mask]
+    mask = df["on street name"].value_counts().values < 10
+    strs_to_other = df["on street name"].value_counts().index[mask]
 
-    mask = df["ON STREET NAME"].isin(strs_to_other)
-    df.loc[mask,"ON STREET NAME"] = "OTHER"
+    mask = df["on street name"].isin(strs_to_other)
+    df.loc[mask,"on street name"] = "OTHER"
 
 
     # now work on time/date: get month, day of week, and hour of the
     # day
 
-    df["MONTH"] = pd.DatetimeIndex(df["DATETIME"]).month
-    df["DAY_OF_WEEK"] = pd.DatetimeIndex(df["DATETIME"]).dayofweek
-    df["HOUR"] = pd.DatetimeIndex(df["DATETIME"]).hour
+    df["month"] = pd["datetime"].dt.month
+    df["DAY_OF_WEEK"] = pd["datetime"].dayofweek
+    df["HOUR"] = pd["datetime"].hour
 
 
     # now drop the datetime
     if drop_featured_columns:
-        df.drop(columns = "DATETIME",inplace = True)
+        df.drop(columns = "datetime",inplace = True)
 
 
     # compute number of vehicles by couning non-nulls in vehicle type
-    df["n_vehicle"] = df.loc[:,"VEHICLE TYPE CODE 1":"VEHICLE TYPE CODE 5"].notnull().sum(axis=1)
+    col_ind = df.columns.str.match("vehicle type")
+    cols = df.columns[col_ind].tolist()
+
+    df["n_vehicle"] = df.loc[:,cols].notnull().sum(axis=1)
 
 
     # vehicle type will not be everything but bikes.  in other words,
@@ -72,8 +75,6 @@ def make_crash_features(df, drop_featured_columns = True):
     # crash.
 
     # there are some cases when there are only 1 vehicle.
-
-    #df.columns[-5:]
 
     # n1bikemask = (df["n_vehicle"] == 1) & (df["VEHICLE TYPE CODE 1"] == "bike")
     # df.loc[n1bikemask,"VEHICLE TYPE CODE 1"] = "none"
@@ -87,25 +88,23 @@ def make_crash_features(df, drop_featured_columns = True):
 
     # concatenate the vehicle types into a single column
 
-    col_ind = df.columns.str.match("VEHICLE")
-    cols = df.columns[col_ind]
-
     # concatenate the columns
-    new_str = df["VEHICLE TYPE CODE 1"]
+    new_str = df["vehicle type code 1"]
     for col in cols[1:]:
         new_str = new_str.str.cat(df[col], sep = ",", na_rep = "")
 
 
     # add result as new column.
-    df["VEHICLES"] = new_str
+    df["vehicles"] = new_str
 
 
-    # first, put a dash in the spaces to keep things like "passenger vehicle" together
-    df["VEHICLES"] = df["VEHICLES"].str.replace(" ","-")
+    # first, put a dash in the spaces to keep things like "passenger
+    # vehicle" together
+    df["vehicles"] = df["vehicles"].str.replace(" ","-")
 
 
     # replace the commas with a white space for the count vectorizer
-    df["VEHICLES"] = df["VEHICLES"].str.replace(","," ")
+    df["vehicles"] = df["vehicles"].str.replace(","," ")
 
     # drop the individual columns
     if drop_featured_columns:
@@ -115,22 +114,22 @@ def make_crash_features(df, drop_featured_columns = True):
     # there are several cases when VEHICLES contains the same two
     # vehicles, but they are ordered differently.  for example, “taxi
     # bike” and “bike taxi”. fix by alphabetizing
-    df["VEHICLES"] = df["VEHICLES"].str.split().apply(sorted,reverse=True).str.join(sep=" ")
+    df["vehicles"] = df["vehicles"].str.split().apply(sorted,reverse=True).str.join(sep=" ")
 
-   
+
     # now concatenate the contributing factors
 
-    # number of factors (1 for each vehicle for the most part)
-    df["n_factor"] = df.loc[:,"CONTRIBUTING FACTOR VEHICLE 1":"CONTRIBUTING FACTOR VEHICLE 5"].notnull().sum(axis=1)
-
-
     # build list of columns on which to operate
-    col_ind = df.columns.str.match("CONTRIBUTING")
-    cols = df.columns[col_ind]
+    col_ind = df.columns.str.match("contributing")
+    cols = df.columns[col_ind].tolist()
+
+    # number of factors (1 for each vehicle for the most part)
+
+    df["n_factor"] = df.loc[:,cols].notnull().sum(axis=1)
 
 
     # concatenate all CONTRIBUTING FACTORS text into a single column
-    new_str = df["CONTRIBUTING FACTOR VEHICLE 1"]
+    new_str = df["contributing factor vehicle 1"]
     for col in cols[1:]:
         new_str = new_str.str.cat(df[col], sep = ",", na_rep = "")
 
@@ -148,7 +147,7 @@ def make_crash_features(df, drop_featured_columns = True):
 
     # replace the commas with a white space for the count vectorizer
     df["factors"] = df["factors"].str.replace(","," ")
-   
+
     # something about the string types is causing the sklearn
     # CountVectorizer to choke.  solution is to change to unicode:
     # https://stackoverflow.com/questions/39303912/tfidfvectorizer-in-scikit-learn-valueerror-np-nan-is-an-invalid-document
@@ -158,5 +157,5 @@ def make_crash_features(df, drop_featured_columns = True):
     if drop_featured_columns:
         df.drop(columns = cols, inplace = True)
 
-   
+
     return df
