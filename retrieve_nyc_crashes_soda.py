@@ -18,6 +18,8 @@ def retrieve_nyc_crashes_soda(token = None, query = None, output_file = None):
     VEHICLE_TYPE_CODE_4 = 'Bike' OR VEHICLE_TYPE_CODE_4 = 'BICYCLE'
     OR
     VEHICLE_TYPE_CODE_5 = 'Bike' OR VEHICLE_TYPE_CODE_5 = 'BICYCLE'
+    OR
+    NUMBER_OF_CYCLIST_INJURED > 0 OR NUMBER_OF_CYCLIST_KILLED > 0
     limit 1000000
 
     Note we have to specify a very high limit because the query
@@ -52,6 +54,8 @@ def retrieve_nyc_crashes_soda(token = None, query = None, output_file = None):
                 VEHICLE_TYPE_CODE_4 = 'Bike' OR VEHICLE_TYPE_CODE_4 = 'BICYCLE'
                 OR
                 VEHICLE_TYPE_CODE_5 = 'Bike' OR VEHICLE_TYPE_CODE_5 = 'BICYCLE'
+                OR
+                NUMBER_OF_CYCLIST_INJURED > 0 OR NUMBER_OF_CYCLIST_KILLED > 0
                 limit 1000000
                 """
 
