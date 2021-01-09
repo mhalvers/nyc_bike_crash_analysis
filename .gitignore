@@ -1,6 +1,14 @@
-# folders
-data
+# data
+*.csv
+*.xlsx
+*.info
+
+# but vc zip code database so it's on github
+!data/NY-zip-code-latitude-and-longitude.csv
+
+# dashboard folder (until more mature)
 dashboard
+
 
 # figures
 *.png
