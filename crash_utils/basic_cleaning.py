@@ -23,7 +23,18 @@ def basic_cleaning(df):
 
 
     # first, remove LOCATION.  it is redundant with LATITUDE and LONGITUDE
-    df.drop(columns = "location", inplace = True)
+    df.drop(columns="location", inplace=True)
+
+
+    # change date and time to datetime64
+    crash_dt = df["crash date"] + " " + df["crash time"]
+    crash_dt = pd.to_datetime(crash_dt)
+    df.insert(0, "datetime", crash_dt)
+    df.drop(columns=["crash date", "crash time"], inplace=True)
+
+
+    # sort the collisions by timestamp
+    df.sort_values(by="datetime", inplace=True, ignore_index=True)
 
 
     # there are some zeros in the positions
@@ -34,21 +45,15 @@ def basic_cleaning(df):
 
     # correct the mis-spelling of "illness"
     mask = df["contributing factor vehicle 1"].str.fullmatch("illnes", case=False)
-    mask.fillna(False,inplace = True)
+    mask.fillna(False, inplace=True)
     df.loc[mask,"contributing factor vehicle 1"] = "Illness"
 
 
-    # change date and time to datetime64
-    crash_dt = df["crash date"] + " " + df["crash time"]
-    crash_dt = pd.to_datetime(crash_dt)
-    df.insert(0, "datetime", crash_dt)
-    df.drop(columns = ["crash date", "crash time"], inplace = True)
-
-
+    
     # off-street name
     # list( df["off street name"][~df["off street name"].isna()] )
     # basically a street address if there is one.  missing 90% of the values
-    df.drop(columns="off street name", inplace = True)
+    df.drop(columns="off street name", inplace=True)
 
 
     # title-ize the street names
@@ -65,13 +70,15 @@ def basic_cleaning(df):
     na_rows = df["number of persons injured"].isna()
     na_rows = df.loc[na_rows,:].index
 
-    # the first one, 21634, has no injuries or deaths, but a bike was involved
-    # assume then this was a property damage incident (no injury or death)
+    # the first one has no injuries or deaths, but a bike was involved
+    # assume then this was a property damage incident (no injury or
+    # death)
     df.loc[na_rows[0],"number of persons injured"] = 0
     df.loc[na_rows[0],"number of persons killed"] = 0
 
 
-    # the second one, 26814, has a NUMER OF CYCLIST INJURED = 1, but nothing in the
+    # the second one has a NUMER OF CYCLIST INJURED = 1, but nothing
+    # in the persons injured or persons killed columns
     df.loc[na_rows[1],"number of persons injured"] = 1
     df.loc[na_rows[1],"number of persons killed"] = 0
 
@@ -91,7 +98,7 @@ def basic_cleaning(df):
 
     new_str = df["vehicle type code 1"]
     for col in cols[1:]:
-        new_str = new_str.str.cat(df[col], sep = ",", na_rep = "")
+        new_str = new_str.str.cat(df[col], sep=",", na_rep="")
 
 
     # what rows contain "bike"?
@@ -109,12 +116,8 @@ def basic_cleaning(df):
     df = df.loc[the_mask]
 
 
-    # sort the collisions by timestamp
-    df.sort_values(by = "datetime", inplace = True, ignore_index = True)
-
-
     # any duplicate rows?
-    df.drop_duplicates(inplace = True, ignore_index = True)
+    df.drop_duplicates(inplace=True, ignore_index=True)
 
 
     return df
