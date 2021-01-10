@@ -1,4 +1,5 @@
-def retrieve_nyc_crashes_soda(token = None, query = None, output_file = None):
+#!/usr/bin/env python3
+def retrieve_nyc_crashes_soda(token=None, query=None, output_file=None):
 
     """Retrieve NYC motor vehicle crash data from NYC Open Data using the
     sodapy, the python client for the Socrata Open Data API.  Returns
@@ -27,6 +28,7 @@ def retrieve_nyc_crashes_soda(token = None, query = None, output_file = None):
 
     """
 
+    import os
     import pandas as pd
     from sodapy import Socrata
 
@@ -83,7 +85,27 @@ def retrieve_nyc_crashes_soda(token = None, query = None, output_file = None):
 
     if output_file is not None:
         df.to_csv(path_or_buf = output_file, index=False)
-        print(f"Wrote file: {output_file}")
+        print(f"Wrote file: {os.getcwd()}/{output_file}")
 
 
     return df
+
+
+
+if __name__ == "__main__":
+
+    import argparse
+
+    my_parser = argparse.ArgumentParser(description="Download NPYD motor vehicle crash data")
+
+    my_parser.add_argument("token",  type=str, help="User's token")
+    my_parser.add_argument("output", type=str, help="Data output file name")
+    my_parser.add_argument("--query", type=str, help="SoSQL query string")
+
+    args = my_parser.parse_args()
+
+    my_token = args.token
+    my_query = args.query
+    outfile = args.output
+
+    retrieve_nyc_crashes_soda(token=my_token, query=my_query, output_file=outfile)
