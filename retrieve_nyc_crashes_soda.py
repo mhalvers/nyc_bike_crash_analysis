@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
     my_parser = argparse.ArgumentParser(description="Download NPYD motor vehicle crash data")
 
-    my_parser.add_argument("token",  type=str, help="User's token")
+    my_parser.add_argument("--token", type=str, help="User's token")
     my_parser.add_argument("output", type=str, help="Data output file name")
     my_parser.add_argument("--query", type=str, help="SoSQL query string")
 
