@@ -4,9 +4,19 @@
 
 This repo contains python notebooks and code to analyze NYPD records of bike crashes.  The goals was to do some basic EDA to develop an understanding of when/why/where crashes occur, and then to build a predictive model for bike crashes.  
 
-# Report
+# Analysis report
 
 A brief report summarizing the findings of the analysis can be found in markdown format [here](https://github.com/mhalvers/nyc_bike_crash_analysis/tree/main/report).
+
+# Instructions for use
+
+1. Clone the repo: `git clone https://github.com/mhalvers/nyc_bike_crash_analysis.git`
+2. Run `make` to download the most recent crash data.  Here is what `make` will do:
+   1. Run `retrieve_nyc_crashes_soda.py` to download all available data into a csv file using [sodaypy](https://github.com/xmunoz/sodapy), a python client for the [Socrata Open Data API](https://dev.socrata.com/).
+   2. (Optional) Downloading works best when the data request is made with a user-specific token (strict throttling is removed).  A token can be obtained by registering here with Socrata: https://data.cityofnewyork.us/signup.  
+   3. (Optional) Store the token in an environment variable called `SODAPY_APPTOKEN` with the following command: `export SODAPY_APPTOKEN=<token>`.  Better yet, place this into your `.bash_profile` or `.bashrc`.
+3. Or, simply run `retrieve_nyc_crashes_soda.py`.  Command line options are required, type `./retrieve_nyc_crashes_soda.py --help` for help.
+4. Open `NYC_bike_crash_summary_stats.ipynb` to read the data from the csv output and explore.
 
 ## Data
 
